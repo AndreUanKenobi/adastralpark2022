@@ -159,3 +159,11 @@ The Job will run for 2/3 mins, in case show the already-run example
 - Select SSN, select "Add Policy Tag"
 - The table is now secured! 
 
+## Dataplex Data Mesh
+Referece user `tadej@2023528041521.altostrat.com` / `TadejRule5!@`
+- Create "My first lake"  (will find it already created)
+- Create the "Raw" Data zone 
+- Add Assets:
+  - BigQuery tables
+  - Storage Buckets (mind the region!)
+  - Grant Tadej view role on Dataplex resources. 
