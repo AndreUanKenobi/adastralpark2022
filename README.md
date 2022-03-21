@@ -130,4 +130,19 @@ SELECT ts,attr1,attr2,attr3  FROM `openreachday2022.openreach.bigtable-timeserie
 ```
 gsutil cp -r gs://andreuankenobi-demo-datasets/* gs://openreach-demo-2022
 ```
-2. 
+2. Create a federated table `client-federated`
+
+3. First inspect all columns
+```
+SELECT *
+ FROM `openreachday2022.openreach.client-federated` LIMIT 1000
+```
+4. Create an authorized view `client-curated` from the federated view, using the only non-PII data
+```
+SELECT gender, client_id, district_id, disp_id, traffice_source, dob, age, job
+ FROM `openreachday2022.openreach.client-federated`
+ ```
+5. Scan the federated table with DLP - to identify PIIs (SSN)
+Remember to
+- Detection: set Confidence Thresold to "Unspecified"
+- Actions: publish to Data Catalog
