@@ -130,19 +130,32 @@ SELECT ts,attr1,attr2,attr3  FROM `openreachday2022.openreach.bigtable-timeserie
 ```
 gsutil cp -r gs://andreuankenobi-demo-datasets/* gs://openreach-demo-2022
 ```
-2. Create a federated table `client-federated`
+2. Create a native table from the federated view `client`
 
 3. First inspect all columns
 ```
 SELECT *
- FROM `openreachday2022.openreach.client-federated` LIMIT 1000
+ FROM `openreachday2022.openreach.client` LIMIT 1000
 ```
 4. Create an authorized view `client-curated` from the federated view, using the only non-PII data
 ```
 SELECT gender, client_id, district_id, disp_id, traffice_source, dob, age, job
- FROM `openreachday2022.openreach.client-federated`
+ FROM `openreachday2022.openreach.client`
  ```
+
 5. Scan the federated table with DLP - to identify PIIs (SSN)
 Remember to
 - Detection: set Confidence Thresold to "Unspecified"
 - Actions: publish to Data Catalog
+The Job will run for 2/3 mins, in case show the already-run example
+
+6. Create and assign policy tags:
+- In Data Catalog, scearh for tag template "Data Loss Prevention Tags"
+- The "Client" table will pop up. Preview it in the preview panel to confirm SSN is there 
+- Click on the table, and confirm the SSN tag has been fired
+- Confirm how there's not policy tag attached to the column 
+- Scroll up, and select "Open in BigQuery"
+- Under Schema, click "Edit Schema" - on the bottom
+- Select SSN, select "Add Policy Tag"
+- The table is now secured! 
+
