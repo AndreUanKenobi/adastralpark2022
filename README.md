@@ -121,5 +121,13 @@ making sure to persist it to a Native Table `bigtable-timeseries-native`
 7. Create an authorized view 'timeseries' in the dataset `reporting` as 
 
 ```
-SELECT ts,attr1,attr2,attr3  FROM `openreachday2022.openreach.bigtable-timeseries-native
+SELECT ts,attr1,attr2,attr3  FROM `openreachday2022.openreach.bigtable-timeseries-native`
 ```
+
+
+## Cloud Storage Federation
+1. Move the files to a local bucket (should already be done)
+```
+gsutil cp -r gs://andreuankenobi-demo-datasets/* gs://openreach-demo-2022
+```
+2. 
