@@ -112,7 +112,7 @@ cast(cell_data.attr8.cell.value as NUMERIC) attr8,
 cast(cell_data.attr9.cell.value as NUMERIC) attr9,
 cast(cell_data.attr10.cell.value as NUMERIC) attr10,
 timestamp(cell_data.tstamp.cell.value) ts
-FROM `openreachday2022.openreach.bigtable-timeseries-federated` LIMIT 10
+FROM `openreachday2022.openreach.bigtable-timeseries-federated` 
 ```
 
 making sure to persist it to a Native Table `bigtable-timeseries-native`
@@ -122,6 +122,34 @@ making sure to persist it to a Native Table `bigtable-timeseries-native`
 
 ```
 SELECT ts,attr1,attr2,attr3  FROM `openreachday2022.openreach.bigtable-timeseries-native`
+```
+8. Touch of BigQuery ML to create a anomaly detection model:
+
+```
+
+CREATE MODEL `openreach.my_kmeans_model`
+OPTIONS(
+  MODEL_TYPE = 'kmeans',
+  NUM_CLUSTERS = 8,
+  KMEANS_INIT_METHOD = 'kmeans++'
+) AS
+SELECT 
+  * EXCEPT(rowkey, ts) 
+FROM 
+  `openreachday2022.openreach.bigtable-timeseries-native`;
+
+```
+
+9. Detect anomalies:
+```
+SELECT
+  *
+FROM
+  ML.DETECT_ANOMALIES(MODEL `openreach.my_kmeans_model`,
+                      STRUCT(0.02 AS contamination),
+                      TABLE `openreachday2022.openreach.bigtable-timeseries-native`)
+                
+                where is_anomaly is true;
 ```
 
 
